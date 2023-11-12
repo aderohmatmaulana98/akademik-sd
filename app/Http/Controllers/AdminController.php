@@ -10,7 +10,8 @@ class AdminController extends Controller
 
         return view('admin.index');
     }
-    public function FunctionName() {
-        
+    public function tahunAjaran() {
+        $title = 'Tahun Ajaran';
+        return view('admin.tahun_ajaran', compact('title'));
     }
 }

@@ -388,7 +388,11 @@
 		<script src="{{ asset('assets/js/theme-settings.js')}}"></script>
 
 		<!-- Custom JS -->
-		<script src="{{ asset('assets/js/app.js')}}"></script>
+		<script src="{{ asset('assets/js/app.js')}}"></script>		
 		
+		<!-- Datatable JS -->
+		<script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script>
+		<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
+				
     </body>
 </html>

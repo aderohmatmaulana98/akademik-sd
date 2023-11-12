@@ -21,4 +21,5 @@ Route::controller(AuthController::class)->group( function (){
 });
 Route::controller(AdminController::class)->group( function (){
     Route::get('/admin-dashboard','dashboard')->name('admin.dashboard');
+    Route::get('/admin/tahun_ajaran','tahunAjaran')->name('admin.tahunajaran');
 });

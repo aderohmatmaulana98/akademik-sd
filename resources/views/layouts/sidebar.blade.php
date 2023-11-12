@@ -36,7 +36,7 @@
                         <li><a href="employees.html">Kelas</a></li>
                         <li><a href="holidays.html">Mata Pelajaran</a></li>
                         <li><a href="leaves-employee.html">Semester</a></li>
-                        <li><a href="leave-settings.html">Tahun Ajaran</a></li>
+                        <li><a href="{{ route('admin.tahunajaran') }}">Tahun Ajaran</a></li>
                         <li><a href="attendance.html">Pengumuman</a></li>
                     </ul>
                 </li>
