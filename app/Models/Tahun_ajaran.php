@@ -15,4 +15,8 @@ class Tahun_ajaran extends Model
     protected $fillable = [ //kolom yang diizinkan diisi secara massal
         'th_ajaran',
     ];
+    public function semester()
+    {
+        return $this->hasMany(Semester::class, 'tahun_ajaran_id', 'id_tahun_ajaran');
+    }
 }

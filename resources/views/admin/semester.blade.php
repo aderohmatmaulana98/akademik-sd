@@ -9,14 +9,14 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="page-title">Tahun Ajaran</h3>
+                    <h3 class="page-title">Semester</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
                         <li class="breadcrumb-item active">{{ $title }}</li>
                     </ul>
                 </div>
                 <div class="col-auto float-end ms-auto">
-                    <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i>Tambah Tahun Ajaran</a>
+                    <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i>Tambah Semester</a>
                 </div>
             </div>
         </div>
@@ -43,19 +43,21 @@
                             <tr>
                                 <th class="width-thirty">#</th>
                                 <th>Tahun Ajaran</th>
+                                <th>Semester</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tahun_ajaran as $index => $item )
+                            @foreach ($semester as $index => $item )
                             <tr>
                                 <td>{{ $index+1 }}</td>
-                                <td>{{ $item->th_ajaran }}</td>
+                                <td>{{ $item->tahun_ajaran->th_ajaran }}</td>
+                                <td>{{ $item->smt }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#edit_department{{ $item->id_tahun_ajaran }}">Edit</button>
+                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#edit_department{{ $item->id_semester }}">Edit</button>
 
                                      <!-- Edit Department Modal -->
-                                    <div id="edit_department{{ $item->id_tahun_ajaran }}" class="modal custom-modal fade" role="dialog">
+                                    <div id="edit_department{{ $item->id_semester }}" class="modal custom-modal fade" role="dialog">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -65,11 +67,24 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('admin.edittahunajaran', ['id_tahun_ajaran' => $item->id_tahun_ajaran]) }}" method="POST">
+                                                    <form action="{{ route('admin.editSemester', ['id_semester' => $item->id_semester]) }}" method="POST">
                                                         @csrf
                                                         <div class="input-block mb-3">
-                                                            <label class="col-form-label">Tahun Ajaran <span class="text-danger">*</span></label>
-                                                            <input class="form-control" value="{{ $item->th_ajaran }}" name="th_ajaran" type="text" required>
+                                                            <label class="col-form-label">Semester<span class="text-danger">*</span></label>
+                                                            <input class="form-control" value="{{ $item->smt }}" name="semester" type="text" required>
+                                                        </div>
+                                                        <div class="input-block mb-3">
+                                                            <div>
+                                                                <label class="col-form-label">Tahun Ajaran<span class="text-danger">*</span></label>
+                                                                <select class="form-control form-select" name="tahun_ajaran" required>
+                                                                    <option value="">-- Pilih --</option>
+                                                                    @foreach ($tahun_ajaran as $ta)
+
+                                                                    <option value="{{ $ta->id_tahun_ajaran }}" {{ ($ta->id_tahun_ajaran == $item->tahun_ajaran_id) ? 'selected' : '' }}>{{ $ta->th_ajaran }}</option>
+                                                                        
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                         <div class="submit-section">
                                                             <button type="submit" class="btn btn-primary submit-btn">Save</button>
@@ -81,7 +96,7 @@
                                     </div>
                                     <!-- /Edit Department Modal -->
 
-                                    <form action="{{ route('admin.deletetahunajaran', ['id_tahun_ajaran' => $item->id_tahun_ajaran]) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('admin.deleteSemester', ['id_semester' => $item->id_semester]) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm text-white" onclick="javascript: return confirm('Anda yakin akan menghapus ini? ')">Delete</button>
@@ -108,11 +123,26 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ route('admin.tambahtahunajaran') }}">
+                    <form method="post" action="{{ route('admin.tambahSemester') }}">
                         @csrf
-                        <div class="input-block mb-3">
-                            <label class="col-form-label">Tahun Ajaran <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="th_ajaran" id="th_ajaran" placeholder="2022/2023" required>
+                        <div class="input-block mb-3 row">
+                            <div>
+                                <label class="col-form-label">Tahun Ajaran<span class="text-danger">*</span></label>
+                            </div>
+                            <div>
+                                <select class="form-control form-select" name="tahun_ajaran" required>
+                                    <option value="">-- Pilih --</option>
+                                    @foreach ($tahun_ajaran as $ta)
+
+                                    <option value="{{ $ta->id_tahun_ajaran }}" >{{ $ta->th_ajaran }}</option>
+                                        
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="input-block mb-3">
+                                <label class="col-form-label">Semester<span class="text-danger">*</span></label>
+                                <input class="form-control" name="semester" type="text" required>
+                            </div>                            
                         </div>
                         <div class="submit-section">
                             <button  type="submit" class="btn btn-primary submit-btn">Submit</button>
