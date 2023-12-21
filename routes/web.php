@@ -62,6 +62,12 @@ Route::controller(AdminController::class)->group( function (){
     Route::delete('/admin/wali_kelas/{id_user}','deleteWaliKelas')->name('admin.deleteWaliKelas');
 
     Route::get('/admin/penilaian','penilaian')->name('admin.penilaian');
+    Route::get('/admin/penilaian/kelas/{id_kelas}','nilaiByKelas')->name('admin.nilbykelas');
+
+    Route::get('/admin/jadwal','jadwalPelajaran')->name('admin.jadwal');
+    Route::get('/admin/jadwal/kelas/{id_kelas}','jadwalPelajaranByKelas')->name('admin.jadwalPelajaranByKelas');
+
+
 
     //Profile
     Route::get('/admin/profile','profile')->name('admin.profile');

@@ -22,19 +22,21 @@
     <!-- Header Title -->
     <div class="page-title-box">
         <h3>SDN 115 BANGKO</h3>
+        <span class="text-white">Semester Aktif : 1 </span>
     </div>
     <!-- /Header Title -->
     
     <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa-solid fa-bars"></i></a>
     
     <!-- Header Menu -->
-    <ul class="nav user-menu">            
-
+    <ul class="nav user-menu">           
+            
         <li class="nav-item dropdown has-arrow main-drop">
+            
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                 <span class="user-img"><img src="{{ asset('assets/img/user.jpg') }}" alt="User Image">
-                <span class="status online"></span></span>
-                <span>Admin</span>
+                    <span class="status online"></span></span>
+                    <span>Admin</span>
             </a>
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="profile.html">My Profile</a>

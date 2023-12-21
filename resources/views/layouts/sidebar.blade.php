@@ -11,8 +11,8 @@
                 <li>
                     <a href="{{ route('admin.penilaian') }}"><i class="la la-graduation-cap"></i> <span> Penilaian </span></a>
                 </li>
-                <li class="submenu">
-                    <a href="#"><i class="la la-clock-o"></i> <span> Jadwal Pelajaran </span></a>
+                <li >
+                    <a href="{{ route('admin.jadwal') }}"><i class="la la-clock-o"></i> <span> Jadwal Pelajaran </span></a>
                 </li>
                 <li class="submenu">
                     <a href="#"><i class="la la-cube"></i> <span>Kelola Akun</span> <span class="menu-arrow"></span></a>

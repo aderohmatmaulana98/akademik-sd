@@ -44,6 +44,7 @@
                                 <th class="width-thirty">#</th>
                                 <th>Tahun Ajaran</th>
                                 <th>Semester</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -53,6 +54,7 @@
                                 <td>{{ $index+1 }}</td>
                                 <td>{{ $item->tahun_ajaran->th_ajaran }}</td>
                                 <td>{{ $item->smt }}</td>
+                                <td>{{ ($item->is_active == 1) ? 'Aktif' : 'Tidak Aktif' }}</td>
                                 <td>
                                     <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#edit_department{{ $item->id_semester }}">Edit</button>
 
@@ -80,9 +82,19 @@
                                                                     <option value="">-- Pilih --</option>
                                                                     @foreach ($tahun_ajaran as $ta)
 
-                                                                    <option value="{{ $ta->id_tahun_ajaran }}" {{ ($ta->id_tahun_ajaran == $item->tahun_ajaran_id) ? 'selected' : '' }}>{{ $ta->th_ajaran }}</option>
+                                                                         <option value="{{ $ta->id_tahun_ajaran }}" {{ ($ta->id_tahun_ajaran == $item->tahun_ajaran_id) ? 'selected' : '' }}>{{ $ta->th_ajaran }}</option>
                                                                         
                                                                     @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block mb-3">
+                                                            <div>
+                                                                <label class="col-form-label">Status Aktif<span class="text-danger">*</span></label>
+                                                                <select class="form-control form-select" name="is_active" required>
+                                                                    <option value="">-- Pilih Keaktifan --</option>
+                                                                    <option {{ ($item->is_active == 1) ? 'selected' : '' }} value="1">Aktif</option>
+                                                                    <option {{ ($item->is_active == 0) ? 'selected' : '' }} value="0">Tidak Aktif</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -127,23 +139,36 @@
                         @csrf
                         <div class="input-block mb-3 row">
                             <div>
-                                <label class="col-form-label">Tahun Ajaran<span class="text-danger">*</span></label>
-                            </div>
-                            <div>
-                                <select class="form-control form-select" name="tahun_ajaran" required>
-                                    <option value="">-- Pilih --</option>
-                                    @foreach ($tahun_ajaran as $ta)
-
-                                    <option value="{{ $ta->id_tahun_ajaran }}" >{{ $ta->th_ajaran }}</option>
-                                        
-                                    @endforeach
-                                </select>
+                                <div>
+                                    <label class="col-form-label">Tahun Ajaran<span class="text-danger">*</span></label>
+                                </div>
+                                <div>
+                                    <select class="form-control form-select" name="tahun_ajaran" required>
+                                        <option value="">-- Pilih --</option>
+                                        @foreach ($tahun_ajaran as $ta)
+    
+                                        <option value="{{ $ta->id_tahun_ajaran }}" >{{ $ta->th_ajaran }}</option>
+                                            
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="input-block mb-3">
                                 <label class="col-form-label">Semester<span class="text-danger">*</span></label>
                                 <input class="form-control" name="semester" type="text" required>
-                            </div>                            
+                            </div> 
+                            <div>
+                                <label class="col-form-label">Status Aktif<span class="text-danger">*</span></label>
+                            </div>
+                            <div>
+                                <select class="form-control form-select" name="is_active" required>
+                                    <option value="">-- Pilih Keaktifan--</option>
+                                    <option value="1">AKtif</option>
+                                    <option value="0">Tidak Aktif</option>
+                                </select>
+                            </div>                           
                         </div>
+                        
                         <div class="submit-section">
                             <button  type="submit" class="btn btn-primary submit-btn">Submit</button>
                         </div>

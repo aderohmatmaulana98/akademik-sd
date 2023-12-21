@@ -104,6 +104,7 @@ class AdminController extends Controller
         $validator = Validator::make($request->all(), [
             'semester' => 'required',
             'tahun_ajaran' => 'required',
+            'is_active' => 'required',
         ]);
 
         // Cek apakah validasi berhasil
@@ -117,6 +118,7 @@ class AdminController extends Controller
         $semester = Semester::create([
             'smt' => $request->semester,
             'tahun_ajaran_id' => $request->tahun_ajaran,
+            'is_active' => $request->is_active,
         ]);
         
         if ($semester) {
@@ -131,6 +133,7 @@ class AdminController extends Controller
         $validator = Validator::make($request->all(), [
             'semester' => 'required',
             'tahun_ajaran' => 'required',
+            'is_active' => 'required',
         ]);
 
         // Cek apakah validasi berhasil
@@ -150,6 +153,7 @@ class AdminController extends Controller
 
         $semester->tahun_ajaran_id = $request->tahun_ajaran;
         $semester->smt = $request->semester;
+        $semester->is_active = $request->is_active;
         $semester->save();
 
         return redirect()->route('admin.semester')->with('success', 'Semester berhasil diperbarui');
@@ -564,9 +568,31 @@ class AdminController extends Controller
     public function penilaian() {
         $title = 'List Kelas';
 
-        $kelas = Kelas::all();
+        $kelas = Kelas::orderBy('nama_kelas', 'ASC')->get();;
 
         return view('admin.nilai', compact('title', 'kelas'));
 
+    }
+    public function nilaiByKelas($id_kelas) {
+        $title = 'Penilaian';
+        $nilai_by_kelas = DB::table('nilai')
+        ->join('siswa', 'nilai.siswa_id', '=', 'siswa.id_siswa')
+        ->join('users', 'users.id_user', '=', 'siswa.user_id')
+        ->join('jadwal', 'nilai.jadwal_id', '=', 'jadwal.id_jadwal')
+        ->join('kelas', 'kelas.id_kelas', '=', 'jadwal.kelas_id')
+        ->join('semester', 'semester.id_semester', '=', 'jadwal.semester_id')
+        ->where('kelas.id_kelas',$id_kelas)
+        ->where('semester.is_active', 1)
+        ->select('users.name','siswa.nisn','kelas.nama_kelas', 'nilai.tugas', 'nilai.uts', 'nilai.uas','nilai.nil_akhir',)
+        ->get();
+
+        return view('admin.nilai_per_kelas', compact('title', 'nilai_by_kelas'));
+    }
+    public function jadwalPelajaran() {
+        $title = 'List Kelas';
+
+        $kelas = Kelas::orderBy('nama_kelas', 'ASC')->get();;
+
+        return view('admin.jadwal', compact('title', 'kelas'));
     }
 }
