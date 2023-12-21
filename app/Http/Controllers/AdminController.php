@@ -8,6 +8,7 @@ use App\Models\Semester;
 use App\Models\Siswa;
 use App\Models\Tahun_ajaran;
 use App\Models\User;
+use App\Models\Wali_kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -310,7 +311,7 @@ class AdminController extends Controller
     public function siswa()  {
         $title = 'Data Siswa';
 
-        $siswa = Siswa::all();
+        $siswa = Siswa::orderBy('created_at', 'DESC')->get();
 
         $kelas = Kelas::all();
 
@@ -345,7 +346,7 @@ class AdminController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt(str_replace('-', '', $tgl_lahir)),
-            'role_id' => 1,            
+            'role_id' => 3,            
         ]);
         $user->save();
         $user_id = $user->id_user;
@@ -394,17 +395,178 @@ class AdminController extends Controller
         }
 
         // Jika validasi berhasil, perbarui data menggunakan model update
-        $mapel = Mapel::where('id_siswa', $id_siswa)->first();
-      
-        
-        if (!$mapel) {
+        $siswa = Siswa::where('id_siswa', $id_siswa)->first();
+        if (!$siswa) {
             return redirect()->route('admin.siswa')->with('error', 'Siswa tidak ditemukan');
         }
+
+        $id_user = $siswa->user_id;
+
+        $user = User::where('id_user', $id_user)->first();
         
-        $mapel->kode_mapel = $request->kode_mapel;
-        $mapel->nama_mapel = $request->nama_mapel;
-        $mapel->save();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        $siswa->nisn = $request->nisn;
+        $siswa->kelas_id = $request->kelas_id;
+        $siswa->jenis_kelamin = $request->jenis_kelamin;
+        $siswa->tempat_lahir = $request->tempat_lahir;
+        $siswa->tanggal_lahir = $request->tanggal_lahir;
+        $siswa->alamat = $request->alamat;
+        $siswa->no_hp = $request->no_hp;
+        $siswa->tahun_masuk = $request->tahun_masuk;
+        $siswa->status_aktif = $request->status_aktif;
+        $siswa->save();
 
         return redirect()->route('admin.siswa')->with('success', 'Siswa berhasil diperbarui');
+    }
+    public function detailSiswa($id_siswa)  {
+        $title = 'Detail Data Siswa';
+
+        $siswa = Siswa::with('users','kelas')->where('id_siswa', $id_siswa)->first();
+        
+        return view('admin.siswa_detail', compact('title', 'siswa'));
+    }
+    public function deleteSiswa($id_user) {
+        $user = User::where('id_user', $id_user);
+        if (! $user) {
+            return redirect()->route('admin.siswa')->with('error', 'Siswa tidak ditemukan');
+        }
+        $user->delete();
+        return redirect()->route('admin.siswa')->with('success', 'Siswa berhasil dihapus');
+    }
+    public function waliKelas() {
+        $title = 'Data Wali Kelas';
+
+        $wali_kelas = Wali_kelas::orderBy('created_at', 'DESC')->get();;
+
+        $kelas = Kelas::all();
+
+        return view('admin.wali_kelas', compact('title', 'wali_kelas', 'kelas'));
+    }
+    public function tambahWaliKelas(Request $request) {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+           'nip' => 'required',
+           'name' => 'required',
+           'email' => 'required',
+           'kelas_id' => 'required',
+           'jenis_kelamin' => 'required',
+           'tempat_lahir' => 'required',
+           'tanggal_lahir' => 'required',
+           'alamat' => 'required',
+           'no_hp' => 'required',
+           'pendidikan' => 'required',
+       ]);
+
+       // Cek apakah validasi berhasil
+       if ($validator->fails()) {
+           return redirect()->route('admin.wali_kelas')
+               ->withErrors($validator)
+               ->withInput();
+       }
+       $tgl_lahir = $request->tanggal_lahir;
+
+       // Jika validasi berhasil, tambahkan data menggunakan model create
+       $user = new User([            
+           'name' => $request->name,
+           'email' => $request->email,
+           'password' => bcrypt(str_replace('-', '', $tgl_lahir)),
+           'role_id' => 2,            
+       ]);
+       $user->save();
+       $user_id = $user->id_user;
+
+       $wali_kelas = new Wali_kelas([
+           'nip' => $request->nip,
+           'kelas_id' => $request->kelas_id,
+           'jenis_kelamin' => $request->jenis_kelamin,
+           'user_id' => $user_id,
+           'tempat_lahir' => $request->tempat_lahir,
+           'tanggal_lahir' => $request->tanggal_lahir,
+           'alamat' => $request->alamat,
+           'no_hp' => $request->no_hp,
+           'pendidikan_tertinggi' => $request->pendidikan,
+       ]);
+       $wali_kelas->save();
+       if ($wali_kelas) {
+           return redirect()->route('admin.wali_kelas')->with('success', 'Wali kelas berhasil ditambahkan');
+       } else {
+           // Tampilkan notifikasi SweetAlert jika terjadi kesalahan
+           return redirect()->route('admin.wali_kelas')->with('error', 'Wali kelas gagal ditambahkan');
+       }   
+   }
+
+   public function editWaliKelas(Request $request, $id_wali_kelas) {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'nip' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+            'kelas_id' => 'required',
+            'jenis_kelamin' => 'required',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'alamat' => 'required',
+            'no_hp' => 'required',
+            'pendidikan' => 'required',
+        ]);
+
+        // Cek apakah validasi berhasil
+        if ($validator->fails()) {
+            return redirect()->route('admin.wali_kelas')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // Jika validasi berhasil, perbarui data menggunakan model update
+        $wali_kelas = Wali_kelas::where('id_wali_kelas', $id_wali_kelas)->first();
+        if (!$wali_kelas) {
+            return redirect()->route('admin.wali_kelas')->with('error', 'Wali kelas tidak ditemukan');
+        }
+
+        $id_user = $wali_kelas->user_id;
+
+        $user = User::where('id_user', $id_user)->first();
+        
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        $wali_kelas->nip = $request->nip;
+        $wali_kelas->kelas_id = $request->kelas_id;
+        $wali_kelas->jenis_kelamin = $request->jenis_kelamin;
+        $wali_kelas->tempat_lahir = $request->tempat_lahir;
+        $wali_kelas->tanggal_lahir = $request->tanggal_lahir;
+        $wali_kelas->alamat = $request->alamat;
+        $wali_kelas->no_hp = $request->no_hp;
+        $wali_kelas->pendidikan_tertinggi = $request->pendidikan;
+        $wali_kelas->save();
+
+        return redirect()->route('admin.wali_kelas')->with('success', 'Wali kelas berhasil diperbarui');
+    }
+    public function deleteWaliKelas($id_user) {
+        $user = User::where('id_user', $id_user);
+        if (! $user) {
+            return redirect()->route('admin.wali_kelas')->with('error', 'Wali kelas tidak ditemukan');
+        }
+        $user->delete();
+        return redirect()->route('admin.wali_kelas')->with('success', 'Wali kelas berhasil dihapus');
+    }
+    public function detailWaliKelas($id_wali_kelas) {
+        $title = 'Detail Data Wali Kelas';
+
+        $wali_kelas = Wali_kelas::with('users','kelas')->where('id_wali_kelas', $id_wali_kelas)->first();
+        
+        return view('admin.wali_kelas_detail', compact('title', 'wali_kelas'));
+    }
+    public function penilaian() {
+        $title = 'List Kelas';
+
+        $kelas = Kelas::all();
+
+        return view('admin.nilai', compact('title', 'kelas'));
+
     }
 }

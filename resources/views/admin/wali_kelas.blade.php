@@ -9,14 +9,14 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="page-title">Data Siswa</h3>
+                    <h3 class="page-title">Data Wali Kelas</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active">{{ $title }}</li>
                     </ul>
                 </div>
                 <div class="col-auto float-end ms-auto">
-                    <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i>Tambah Siswa</a>
+                    <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i>Tambah Wali Kelas</a>
                 </div>
             </div>
         </div>
@@ -42,41 +42,41 @@
                         <thead>
                             <tr>
                                 <th class="width-thirty">#</th>
-                                <th>NISN</th>
+                                <th>NIP</th>
                                 <th>Nama Lengkap</th>
                                 <th>Email</th>
-                                <th>Kelas</th>
+                                <th>Wali Kelas</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($siswa as $index => $item )
+                            @foreach ($wali_kelas as $index => $item )
                             <tr>
                                 <td>{{ $index+1 }}</td>
-                                <td>{{ $item->nisn }}</td>
+                                <td>{{ $item->nip }}</td>
                                 <td>{{ $item->users->name }}</td>
                                 <td>{{ $item->users->email }}</td>
                                 <td>{{ $item->kelas->nama_kelas }}</td>
                                 <td>
-                                    <a href="{{ route('admin.detailSiswa',$item->id_siswa) }}" type="button" class="btn btn-primary btn-sm">Detail</a>
-                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#edit_department{{ $item->id_siswa }}">Edit</button>
+                                    <a href="{{ route('admin.detailWaliKelas',$item->id_wali_kelas) }}" type="button" class="btn btn-primary btn-sm">Detail</a>
+                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#edit_department{{ $item->id_wali_kelas }}">Edit</button>
 
                                      <!-- Edit Department Modal -->
-                                    <div id="edit_department{{ $item->id_siswa }}" class="modal custom-modal fade" role="dialog">
+                                    <div id="edit_department{{ $item->id_wali_kelas }}" class="modal custom-modal fade" role="dialog">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Edit Siswa</h5>
+                                                    <h5 class="modal-title">Edit Wali Kelas</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('admin.editSiswa', ['id_siswa' => $item->id_siswa]) }}" method="POST">
+                                                    <form action="{{ route('admin.editWaliKelas', ['id_wali_kelas' => $item->id_wali_kelas]) }}" method="POST">
                                                         @csrf
                                                         <div class="input-block mb-3">
-                                                            <label class="col-form-label">NISN<span class="text-danger">*</span></label>
-                                                            <input class="form-control" value="{{ $item->nisn }}" name="nisn" type="text" required>
+                                                            <label class="col-form-label">NIP<span class="text-danger">*</span></label>
+                                                            <input class="form-control" value="{{ $item->nip }}" name="nip" type="text" required>
                                                         </div>
                                                         <div class="input-block mb-3">
                                                             <label class="col-form-label">Nama Lengkap<span class="text-danger">*</span></label>
@@ -126,16 +126,17 @@
                                                             <input class="form-control" value="{{ $item->no_hp }}" name="no_hp" type="text" required>
                                                         </div>
                                                         <div class="input-block mb-3">
-                                                            <label class="col-form-label">Tahun Masuk<span class="text-danger">*</span></label>
-                                                            <input class="form-control" value="{{ $item->tahun_masuk }}" name="tahun_masuk" type="number" required>
-                                                        </div>
-                                                        <div class="input-block mb-3">
                                                             <div>
-                                                                <label class="col-form-label">Status Aktif<span class="text-danger">*</span></label>
-                                                                <select class="form-control form-select" name="status_aktif" required>
+                                                                <label class="col-form-label">Pendidikan<span class="text-danger">*</span></label>
+                                                                <select class="form-control form-select" name="pendidikan" required>
                                                                     <option value="">-- Pilih --</option>
-                                                                    <option {{ ($item->status_aktif == 1) ? 'selected' : '' }} value="1">Aktif</option>
-                                                                    <option {{ ($item->status_aktif == 0) ? 'selected' : '' }} value="0">Tidak aktif</option>
+                                                                    <option {{ ($item->pendidikan_tertinggi == 'SMA/SMK') ? 'selected' : '' }} value="SMA/SMK">SMA/SMK</option>
+                                                                    <option {{ ($item->pendidikan_tertinggi == 'D1') ? 'selected' : '' }} value="D1">D1</option>
+                                                                    <option {{ ($item->pendidikan_tertinggi == 'D2') ? 'selected' : '' }} value="D2">D2</option>
+                                                                    <option {{ ($item->pendidikan_tertinggi == 'D3') ? 'selected' : '' }} value="D3">D3</option>
+                                                                    <option {{ ($item->pendidikan_tertinggi == 'D4') ? 'selected' : '' }} value="D4">D4</option>
+                                                                    <option {{ ($item->pendidikan_tertinggi == 'S1') ? 'selected' : '' }} value="S1">S1</option>
+                                                                    <option {{ ($item->pendidikan_tertinggi == 'S2') ? 'selected' : '' }} value="S2">S2</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -149,7 +150,7 @@
                                     </div>
                                     <!-- /Edit Department Modal -->
 
-                                    <form action="{{ route('admin.deleteSiswa', ['id_user' => $item->users->id_user]) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('admin.deleteWaliKelas', ['id_user' => $item->users->id_user]) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm text-white" onclick="javascript: return confirm('Anda yakin akan menghapus ini? ')">Delete</button>
@@ -170,17 +171,17 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Siswa</h5>
+                    <h5 class="modal-title">Tambah Wali Kelas</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ route('admin.tambahSiswa') }}">
+                    <form method="post" action="{{ route('admin.tambahWaliKelas') }}">
                         @csrf
                         <div class="input-block mb-3">
-                            <label class="col-form-label">NISN<span class="text-danger">*</span></label>
-                            <input class="form-control"  name="nisn" type="text" required>
+                            <label class="col-form-label">NIP<span class="text-danger">*</span></label>
+                            <input class="form-control"  name="nip" type="text" required>
                         </div>
                         <div class="input-block mb-3">
                             <label class="col-form-label">Nama Lengkap<span class="text-danger">*</span></label>
@@ -192,7 +193,7 @@
                         </div>
                         <div class="input-block mb-3">
                             <div>
-                                <label class="col-form-label">Kelas<span class="text-danger">*</span></label>
+                                <label class="col-form-label">Wali Kelas<span class="text-danger">*</span></label>
                                 <select class="form-control form-select" name="kelas_id" required>
                                     <option value="">-- Pilih --</option>
                                     @foreach ($kelas as $kl)
@@ -230,16 +231,17 @@
                             <input class="form-control" name="no_hp" type="text" required>
                         </div>
                         <div class="input-block mb-3">
-                            <label class="col-form-label">Tahun Masuk<span class="text-danger">*</span></label>
-                            <input class="form-control" name="tahun_masuk" type="number" required>
-                        </div>
-                        <div class="input-block mb-3">
                             <div>
-                                <label class="col-form-label">Status Aktif<span class="text-danger">*</span></label>
-                                <select class="form-control form-select" name="status_aktif" required>
+                                <label class="col-form-label">Pendidikan<span class="text-danger">*</span></label>
+                                <select class="form-control form-select" name="pendidikan" required>
                                     <option value="">-- Pilih --</option>
-                                    <option value="1">Aktif</option>
-                                    <option value="0">Tidak aktif</option>
+                                    <option value="SMA/SMK">SMA/SMK</option>
+                                    <option value="D1">D1</option>
+                                    <option value="D2">D2</option>
+                                    <option value="D3">D3</option>
+                                    <option value="D4">D4</option>
+                                    <option value="S1">S1</option>
+                                    <option value="S2">S2</option>
                                 </select>
                             </div>
                         </div>

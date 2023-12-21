@@ -25,7 +25,7 @@
                         <span class="dash-widget-icon"><i class="fa-solid fa-cubes"></i></span>
                         <div class="dash-widget-info">
                             <h3>112</h3>
-                            <span>Projects</span>
+                            <span>Jumlah Siswa</span>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                         <span class="dash-widget-icon"><i class="fa-solid fa-dollar-sign"></i></span>
                         <div class="dash-widget-info">
                             <h3>44</h3>
-                            <span>Clients</span>
+                            <span>Jumlah Guru</span>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                         <span class="dash-widget-icon"><i class="fa-regular fa-gem"></i></span>
                         <div class="dash-widget-info">
                             <h3>37</h3>
-                            <span>Tasks</span>
+                            <span>Tahun Ajaran Aktif</span>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                         <span class="dash-widget-icon"><i class="fa-solid fa-user"></i></span>
                         <div class="dash-widget-info">
                             <h3>218</h3>
-                            <span>Employees</span>
+                            <span>Semester Aktif</span>
                         </div>
                     </div>
                 </div>

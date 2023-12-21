@@ -5,11 +5,11 @@
                 <li class="menu-title"> 
                     <span>Main</span>
                 </li>
-                <li class="submenu">
-                    <a href="#"><i class="la la-dashboard"></i> <span> Dashboard </span></a>
+                <li>
+                    <a href="{{ route('admin.dashboard') }}"><i class="la la-dashboard"></i> <span> Dashboard </span></a>
                 </li>
-                <li class="submenu">
-                    <a href="#"><i class="la la-graduation-cap"></i> <span> Penilaian </span></a>
+                <li>
+                    <a href="{{ route('admin.penilaian') }}"><i class="la la-graduation-cap"></i> <span> Penilaian </span></a>
                 </li>
                 <li class="submenu">
                     <a href="#"><i class="la la-clock-o"></i> <span> Jadwal Pelajaran </span></a>
@@ -18,7 +18,7 @@
                     <a href="#"><i class="la la-cube"></i> <span>Kelola Akun</span> <span class="menu-arrow"></span></a>
                     <ul>
                         <li><a href="{{ route('admin.siswa') }}">Siswa</a></li>
-                        <li><a href="events.html">Wali Kelas</a></li>
+                        <li><a href="{{ route('admin.wali_kelas') }}">Wali Kelas</a></li>
                     </ul>
                 </li>
                 <li class="menu-title"> 
