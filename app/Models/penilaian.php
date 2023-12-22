@@ -14,9 +14,10 @@ class penilaian extends Model
 
     protected $fillable = [ //kolom yang diizinkan diisi secara massal
         'siswa_id',
+        'jadwal_id',
         'tugas',
         'uts',
         'uas',
-        'nilai_akhir',
+        'nil_akhir',
     ];
 }

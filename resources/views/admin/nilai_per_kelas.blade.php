@@ -31,6 +31,7 @@
                                 <th>Nama Siswa</th>
                                 <th>NISN</th>
                                 <th>Kelas</th>
+                                <th>Mata Pelajaran</th>
                                 <th>Tugas</th>
                                 <th>UTS</th>
                                 <th>UAS</th>
@@ -45,6 +46,7 @@
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->nisn }}</td>
                                 <td>{{ $item->nama_kelas }}</td>
+                                <td>{{ $item->nama_mapel }}</td>
                                 <td>{{ $item->tugas }}</td>
                                 <td>{{ $item->uts }}</td>
                                 <td>{{ $item->uas }}</td>

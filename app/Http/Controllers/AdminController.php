@@ -17,15 +17,25 @@ class AdminController extends Controller
 {
     //dashboard
     public function dashboard() {
+         $jumlah_siswa = Siswa::all();
+         $jumlah_siswa = $jumlah_siswa->count();
 
-        return view('admin.index');
+         $jumlah_wali_kelas = Wali_kelas::all();
+         $jumlah_wali_kelas = $jumlah_wali_kelas->count();
+
+         $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+         
+
+        return view('admin.index', compact('jumlah_siswa','jumlah_wali_kelas','th_ajaran_aktif'));
     }
 
     //Tahun ajaran
     public function tahunAjaran() {
         $title = 'Tahun Ajaran';
         $tahun_ajaran = Tahun_ajaran::all();
-        return view('admin.tahun_ajaran', compact('title', 'tahun_ajaran'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+        return view('admin.tahun_ajaran', compact('title', 'tahun_ajaran', 'th_ajaran_aktif'));
     }
     public function tambahThAjaran(Request $request){
         // Validasi input
@@ -97,7 +107,10 @@ class AdminController extends Controller
 
         $tahun_ajaran = Tahun_ajaran::all();
 
-        return view('admin.semester', compact('title', 'semester', 'tahun_ajaran'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+
+        return view('admin.semester', compact('title', 'semester', 'tahun_ajaran', 'th_ajaran_aktif'));
     }
     public function tambahSemester(Request $request){
         // Validasi input
@@ -176,7 +189,10 @@ class AdminController extends Controller
 
         $kelas = Kelas::all();
 
-        return view('admin.kelas', compact('title', 'kelas'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+
+        return view('admin.kelas', compact('title', 'kelas', 'th_ajaran_aktif'));
     }
     public function tambahKelas(Request $request){
         // Validasi input
@@ -247,7 +263,10 @@ class AdminController extends Controller
 
         $mapel = Mapel::all();
 
-        return view('admin.mapel', compact('title', 'mapel'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+
+        return view('admin.mapel', compact('title', 'mapel', 'th_ajaran_aktif'));
     }
     public function tambahMapel(Request $request){
         // Validasi input
@@ -319,7 +338,10 @@ class AdminController extends Controller
 
         $kelas = Kelas::all();
 
-        return view('admin.siswa', compact('title', 'siswa', 'kelas'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+
+        return view('admin.siswa', compact('title', 'siswa', 'kelas','th_ajaran_aktif'));
     }
     public function tambahSiswa(Request $request) {
          // Validasi input
@@ -447,7 +469,10 @@ class AdminController extends Controller
 
         $kelas = Kelas::all();
 
-        return view('admin.wali_kelas', compact('title', 'wali_kelas', 'kelas'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+
+        return view('admin.wali_kelas', compact('title', 'wali_kelas', 'kelas', 'th_ajaran_aktif'));
     }
     public function tambahWaliKelas(Request $request) {
         // Validasi input
@@ -568,9 +593,11 @@ class AdminController extends Controller
     public function penilaian() {
         $title = 'List Kelas';
 
-        $kelas = Kelas::orderBy('nama_kelas', 'ASC')->get();;
+        $kelas = Kelas::orderBy('nama_kelas', 'ASC')->get();
 
-        return view('admin.nilai', compact('title', 'kelas'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+        return view('admin.nilai', compact('title', 'kelas','th_ajaran_aktif'));
 
     }
     public function nilaiByKelas($id_kelas) {
@@ -581,18 +608,44 @@ class AdminController extends Controller
         ->join('jadwal', 'nilai.jadwal_id', '=', 'jadwal.id_jadwal')
         ->join('kelas', 'kelas.id_kelas', '=', 'jadwal.kelas_id')
         ->join('semester', 'semester.id_semester', '=', 'jadwal.semester_id')
+        ->join('mapel', 'mapel.id_mapel', '=', 'jadwal.mapel_id')
         ->where('kelas.id_kelas',$id_kelas)
         ->where('semester.is_active', 1)
-        ->select('users.name','siswa.nisn','kelas.nama_kelas', 'nilai.tugas', 'nilai.uts', 'nilai.uas','nilai.nil_akhir',)
+        ->orderBy('mapel.nama_mapel', 'ASC')
+        ->select('users.name','siswa.nisn','mapel.nama_mapel','kelas.nama_kelas', 'nilai.tugas', 'nilai.uts', 'nilai.uas','nilai.nil_akhir',)
         ->get();
 
-        return view('admin.nilai_per_kelas', compact('title', 'nilai_by_kelas'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+
+        return view('admin.nilai_per_kelas', compact('title', 'nilai_by_kelas', 'th_ajaran_aktif'));
     }
     public function jadwalPelajaran() {
         $title = 'List Kelas';
 
-        $kelas = Kelas::orderBy('nama_kelas', 'ASC')->get();;
+        $kelas = Kelas::orderBy('nama_kelas', 'ASC')->get();
 
-        return view('admin.jadwal', compact('title', 'kelas'));
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+
+        return view('admin.jadwal', compact('title', 'kelas', 'th_ajaran_aktif'));
+    }
+    public function jadwalPelajaranByKelas($id_kelas) {
+        $title = 'Jadwal Pelajaran';
+
+        $jadwalPelajaranByKelas = DB::table('jadwal')
+        ->join('semester', 'semester.id_semester', '=', 'jadwal.semester_id')
+        ->join('mapel', 'mapel.id_mapel', '=', 'jadwal.mapel_id')
+        ->join('kelas', 'kelas.id_kelas', '=', 'jadwal.kelas_id')
+        ->where('kelas.id_kelas',$id_kelas)
+        ->where('semester.is_active', 1)
+        ->select('mapel.nama_mapel','kelas.nama_kelas', 'jadwal.hari', 'jadwal.jam', 'semester.smt')
+        ->get();
+
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+
+        return view('admin.jadwal_per_kelas', compact('title', 'jadwalPelajaranByKelas','th_ajaran_aktif'));
+
     }
 }

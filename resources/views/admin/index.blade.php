@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <span class="dash-widget-icon"><i class="fa-solid fa-cubes"></i></span>
                         <div class="dash-widget-info">
-                            <h3>112</h3>
+                            <h4>{{ $jumlah_siswa }}</h4>
                             <span>Jumlah Siswa</span>
                         </div>
                     </div>
@@ -35,8 +35,8 @@
                     <div class="card-body">
                         <span class="dash-widget-icon"><i class="fa-solid fa-dollar-sign"></i></span>
                         <div class="dash-widget-info">
-                            <h3>44</h3>
-                            <span>Jumlah Guru</span>
+                            <h4>{{ $jumlah_wali_kelas }}</h4>
+                            <span>Jumlah Wali Kelas</span>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                     <div class="card-body">
                         <span class="dash-widget-icon"><i class="fa-regular fa-gem"></i></span>
                         <div class="dash-widget-info">
-                            <h3>37</h3>
+                            <h4>{{ $th_ajaran_aktif->tahun_ajaran->th_ajaran }}</h4>
                             <span>Tahun Ajaran Aktif</span>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                     <div class="card-body">
                         <span class="dash-widget-icon"><i class="fa-solid fa-user"></i></span>
                         <div class="dash-widget-info">
-                            <h3>218</h3>
+                            <h4>{{ $th_ajaran_aktif->smt.' '. ($th_ajaran_aktif->smt == 1) ? 'Ganjil' : 'Genap' }}</h4>
                             <span>Semester Aktif</span>
                         </div>
                     </div>

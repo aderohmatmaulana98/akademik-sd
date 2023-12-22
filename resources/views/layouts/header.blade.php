@@ -22,7 +22,7 @@
     <!-- Header Title -->
     <div class="page-title-box">
         <h3>SDN 115 BANGKO</h3>
-        <span class="text-white">Semester Aktif : 1 </span>
+        <span class="text-white">Semester Aktif : {{ $th_ajaran_aktif->smt }} </span>
     </div>
     <!-- /Header Title -->
     

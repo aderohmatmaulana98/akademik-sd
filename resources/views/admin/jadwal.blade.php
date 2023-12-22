@@ -26,7 +26,7 @@
                 @foreach ($kelas as $item)
                 {{-- <a href="#"> --}}
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-4">
-                        <a href="{{ route('admin.nilbykelas', $item->id_kelas) }}">
+                        <a href="{{ route('admin.jadwalPelajaranByKelas', $item->id_kelas) }}">
                             <div class="card dash-widget">
                                 <div class="card-body">
                                     <span class="dash-widget-icon"><i class="fa-solid fa-cubes"></i></span>
