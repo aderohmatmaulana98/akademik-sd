@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jadwal;
 use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Semester;
@@ -627,25 +628,67 @@ class AdminController extends Controller
 
         $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
 
-
         return view('admin.jadwal', compact('title', 'kelas', 'th_ajaran_aktif'));
     }
     public function jadwalPelajaranByKelas($id_kelas) {
         $title = 'Jadwal Pelajaran';
-
+        $id_kelas = $id_kelas;
         $jadwalPelajaranByKelas = DB::table('jadwal')
         ->join('semester', 'semester.id_semester', '=', 'jadwal.semester_id')
         ->join('mapel', 'mapel.id_mapel', '=', 'jadwal.mapel_id')
         ->join('kelas', 'kelas.id_kelas', '=', 'jadwal.kelas_id')
         ->where('kelas.id_kelas',$id_kelas)
         ->where('semester.is_active', 1)
-        ->select('mapel.nama_mapel','kelas.nama_kelas', 'jadwal.hari', 'jadwal.jam', 'semester.smt')
+        ->select('mapel.nama_mapel','kelas.nama_kelas', 'jadwal.hari', 'jadwal.jam', 'semester.smt', 'id_kelas', 'jadwal.id_jadwal')
         ->get();
+
+        $mapel = Mapel::all();
+
+        $semester = Semester::all();
 
         $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
 
 
-        return view('admin.jadwal_per_kelas', compact('title', 'jadwalPelajaranByKelas','th_ajaran_aktif'));
+        return view('admin.jadwal_per_kelas', compact('title', 'jadwalPelajaranByKelas','th_ajaran_aktif','id_kelas', 'mapel', 'semester'));
 
+    }
+    public function tambahJadwal(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'hari' => 'required',
+            'jam' => 'required',
+            'mapel_id' => 'required',
+        ]);
+
+        $th_ajaran_aktif = Semester::with('tahun_ajaran')->where('semester.is_active', 1)->first();
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.jadwalPelajaranByKelas', $request->kelas_id)
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $jadwal = new Jadwal([
+            'hari' => $request->hari,
+            'jam' => $request->jam,
+            'kelas_id' => $request->kelas_id,
+            'mapel_id' => $request->mapel_id,
+            'semester_id' => $th_ajaran_aktif->id_semester,
+        ]);
+        $jadwal->save();
+        if ($jadwal) {
+            return redirect()->route('admin.jadwalPelajaranByKelas', $request->kelas_id)->with('success', 'Jadwal pelajaran berhasil ditambahkan');
+        } else {
+            // Tampilkan notifikasi SweetAlert jika terjadi kesalahan
+            return redirect()->route('admin.jadwalPelajaranByKelas', $request->kelas_id)->with('error', 'Jadwal pelajaran gagal ditambahkan');
+        }  
+    }
+    public function deleteJadwal(Request $request, $id_jadwal) {
+        $jadwal = Jadwal::where('id_jadwal', $id_jadwal);
+        // dd($request->id_kelas);
+        if (! $jadwal) {
+            return redirect()->route('admin.jadwalPelajaranByKelas', $request->id_kelas)->with('error', 'Jadwal tidak ditemukan');
+        }
+        $jadwal->delete();
+        return redirect()->route('admin.jadwalPelajaranByKelas', $request->id_kelas)->with('success', 'Jadwal berhasil dihapus');
     }
 }
